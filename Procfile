@@ -1,2 +1,2 @@
 heroku ps:scale worker=1
-worker: python3 main/build.py
+worker: pip uninstall -y discord && pip uninstall -y discord.py && python3 main/build.py
