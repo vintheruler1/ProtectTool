@@ -9,8 +9,7 @@ APScheduler==3.7.0
 asgiref==3.3.4
 asttokens==2.0.5
 async-rediscache==0.2.0
-async-timeout==3.0.1
-asyncpg==0.22.0
+async-timeout>=4.0.0a3
 attrs==20.3.0
 backcall==0.2.0
 beautifulsoup4==4.10.0
@@ -85,7 +84,6 @@ protobuf==3.17.3
 psutil==5.9.0
 ptyprocess==0.7.0
 pure-eval==0.2.2
-py-cord==2.0.0b4
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.21
