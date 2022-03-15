@@ -1,8 +1,6 @@
 from os import ctermid, times
 from pickletools import read_unicodestring1
 from sqlite3 import Timestamp
-from tkinter import dnd
-from tkinter.messagebox import NO
 from tracemalloc import stop
 import nextcord
 from nextcord import Embed, Interaction, slash_command
@@ -458,7 +456,7 @@ async def on_connect():
     print("Bot connected")
     for guild in bot.guilds:
         serverIDS.append(guild.id)
-    await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="your server. | /help | Blocked over 200 scam links, raids, and nukings."), status=nextcord.Status.do_not_disturb)
+    await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="your server. | /help | Blocked over 200 scam links, raids, and nukings."), status=nextcord.Status.dnd)
     bot.add_startup_application_commands()
     await bot.rollout_application_commands()
 
