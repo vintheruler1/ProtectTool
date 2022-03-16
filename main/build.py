@@ -354,9 +354,9 @@ async def on_message(message):
             for line in read:
                         otherVar = "https://" + line
                         otherVar2 = "http://" + line
-                        otherVar3 = line
-                        otherVar4 = line + "/"
-                        if otherVar in newVar or otherVar2 in newVar or otherVar3 in newVar:
+                        otherVar3 = "https://" + line + "/"
+                        otherVar4 = "http://" + line + "/"
+                        if otherVar in newVar or otherVar2 in newVar or otherVar3 in newVar or otherVar4 in newVar:
                             await message.delete()
                             scamEmbed = nextcord.Embed(
                                 title="<a:weewoo:951883123170365490> Scam Found",
@@ -396,8 +396,9 @@ async def on_message(message):
             if match:
                 resp = requests.get(match)
                 resssp = resp.url
-                if resssp == match:
+                if resssp == match or match == resssp or match is resssp or resssp is match:
                         return
+                
                 elif resssp != match:
                         embed = nextcord.Embed(
                             title="<a:weewoo:951883123170365490> Link Shortened!",
