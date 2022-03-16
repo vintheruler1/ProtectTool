@@ -456,7 +456,7 @@ async def on_connect():
     print("Bot connected")
     for guild in bot.guilds:
         serverIDS.append(guild.id)
-    await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="your server. | !help | Blocked over 200 scam links, raids, and nukings."), status=nextcord.Status.dnd)
+    await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="over your server. | !help | Blocked over 200 scam links, raids, and nukings."), status=nextcord.Status.dnd)
     bot.add_startup_application_commands()
     await bot.rollout_application_commands()
 
