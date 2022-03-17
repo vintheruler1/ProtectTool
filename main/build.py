@@ -21,6 +21,8 @@ import asyncio
 import datetime
 from datetime import *
 
+import json
+
 import subprocess
 
 import humanfriendly
@@ -104,6 +106,17 @@ RESET TO DEFAULT: `!setup <module> --reset````
                          """, 
                          color=0x2f3136)
     await ctx.send(embed=embed)
+
+@setup.command()
+async def antiphish(ctx, setting):
+    with open("./databases/serverConfig.json", "r") as f:
+        serverConfig = json.load(f)
+    
+    if setting == "B" or "b":
+        serverConfig[str(ctx.guild.id)]['antiphish'] = "B"
+
+    with open("./databases/serverConfig.json", "w") as f:
+        json.dump(serverConfig, f)
 
 @bot.command(aliases=['stats'])
 async def info(ctx):
