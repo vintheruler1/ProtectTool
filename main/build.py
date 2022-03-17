@@ -62,15 +62,45 @@ def embed(title, description):
 
 @bot.group()
 async def setup(ctx):
-    embed=nextcord.Embed(title="Customize Anti-Phish, Auto-Moderation, Anti-Nuke, and Anti-Spam punishments.", 
+    embed=nextcord.Embed(title="Customize Anti-Phish, Auto-Moderation, and Anti-Nuke (Includes Anti-Spam) punishments.", 
                          description=
                          """
+                         ```yaml
+SETTINGS: `B` = Ban; `K` = Kick; `D` = Delete```
+                         ```yaml
+DEFAULT SETTINGS: Anti-Phish = Delete message; Anti-Nuke = Mute, Kick, Ban; Auto-Moderation = Mute, Kick```
+                         ```yaml
+RESET TO DEFAULT: `!setup <module> --reset````
+
                          **Anti-Phish Module**
-                         If you want to ban a member after they say a Scam Link, say `!setup AntiPhish B`.
-                         If you want to kick a member after they say a Scam Link, say `!setup AntiPhish K`
-                         If you just want to just delete the message after they send a Scam Link, say `!setup AntiPhish D`
+                         *Anti-Phish Module summary: If the bot detects a scam link in our database, it will auto-matically delete it. You can choose to either **ban, or kick** the member who said so.*
+                         `!setup AntiPhish <setting>`
                          
-                         **Ant
+                         **Auto-Moderation Module**
+
+
+                         **Anti-Nuke Module**
+                         *Anti-Nuke Module summary: Triggered by, mass mention, mass spam, mass channel delete, mass member ban, and mass member kick.*
+                         If someone spam pings >= 5 times in 30 seconds, it will mute them for 30 seconds. 
+                         If someone spam pings >= 10 times in 45 seconds, it will kick them.
+                         If someone spam pings >= 20 in 45 seconds, it will ban them.
+
+                         If someone spams >= 20 messages in 10 seconds, it will mute them for 2 minutes.
+                         If someone spams >= 30 messsages in 15 seconds, it will mute them for 5 minutes.
+                         If someone spams >= 40 messages in 30 seconds or less, it will kick them.
+
+                         If someone deletes >= 5 channels in 1 minute, it will timeout them for 10 minutes.
+                         If someone deletes >= 10 in 1 minute and 30 seconds, it will timeout them for 20 minutes.
+                         If someone deletes >= 15 in 2 minutes, it will timeout the user for 30 minutes.
+
+                         If someone bans >= 20 members in 1 minute, it will timeout the user for 10 minute.
+                         If someone bans >= 30 members in 1 minute and 30 seconds, it will kick the user to get rid of Administrator permissions.
+                         If someone bans >= 50 members in 2 minutes, it will ban the user. 
+                         __MORE SUB COMMANDS COMING SOON__
+
+                         `!setup AntiNuke <setting> <trigger-mentions> <trigger-time-in-seconds>`
+                         
+                         **
                          """, 
                          color=0x2f3136)
     await ctx.send(embed=embed)
