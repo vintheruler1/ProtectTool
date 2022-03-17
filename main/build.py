@@ -60,20 +60,7 @@ def embed(title, description):
     embed=nextcord.Embed(title=f"{title}", description=f"{description}", color=0x2f3136, timestamp=datetime.now())
     return embed
 
-@bot.group()
-async def setup(ctx):
-    embed=nextcord.Embed(title="Customize Anti-Phish, Auto-Moderation, Anti-Nuke, and Anti-Spam punishments.", 
-                         description=
-                         """
-                         **Anti-Phish Module**
-                         If you want to ban a member after they say a Scam Link, say `!setup AntiPhish B`.
-                         If you want to kick a member after they say a Scam Link, say `!setup AntiPhish K`
-                         If you just want to just delete the message after they send a Scam Link, say `!setup AntiPhish D`
-                         
-                         **Ant
-                         """, 
-                         color=0x2f3136)
-    await ctx.send(embed=embed)
+
 
 @bot.command(aliases=['stats'])
 async def info(ctx):
