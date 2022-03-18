@@ -48,7 +48,7 @@ intents.members = True
 intents.presences = True
 intents.messages = True
 
-bot = commands.Bot(command_prefix = commands.when_mentioned_or("!"), intents=intents, case_insensitive=True)
+bot = commands.Bot(command_prefix = commands.when_mentioned_or("!!"), intents=intents, case_insensitive=True)
 
 bot.remove_command('help')
 
@@ -62,47 +62,46 @@ def embed(title, description):
     embed=nextcord.Embed(title=f"{title}", description=f"{description}", color=0x2f3136, timestamp=datetime.now())
     return embed
 
-@bot.group()
+@bot.group(invoke_without_command=True)
 async def setup(ctx):
     embed=nextcord.Embed(title="Customize Anti-Phish, Auto-Moderation, and Anti-Nuke (Includes Anti-Spam) punishments.", 
                          description=
                          """
                          ```yaml
-SETTINGS: `B` = Ban; `K` = Kick; `D` = Delete```
+SETTINGS: B = Ban; K = Kick; D = Delete (Not optional for Anti-Phish)```
                          ```yaml
 DEFAULT SETTINGS: Anti-Phish = Delete message; Anti-Nuke = Mute, Kick, Ban; Auto-Moderation = Mute, Kick```
                          ```yaml
-RESET TO DEFAULT: `!setup <module> --reset````
+RESET TO DEFAULT: !setup <module> --reset```
 
-                         **Anti-Phish Module**
-                         *Anti-Phish Module summary: If the bot detects a scam link in our database, it will auto-matically delete it. You can choose to either **ban, or kick** the member who said so.*
-                         `!setup AntiPhish <setting>`
+**Anti-Phish Module**
+*Anti-Phish Module summary: If the bot detects a scam link in our database, it will auto-matically delete it. You can choose to either **ban, or kick** the member who said so.*
+`!setup AntiPhish <setting>`
                          
-                         **Auto-Moderation Module**
+**Auto-Moderation Module**
 
 
-                         **Anti-Nuke Module**
-                         *Anti-Nuke Module summary: Triggered by, mass mention, mass spam, mass channel delete, mass member ban, and mass member kick.*
-                         If someone spam pings >= 5 times in 30 seconds, it will mute them for 30 seconds. 
-                         If someone spam pings >= 10 times in 45 seconds, it will kick them.
-                         If someone spam pings >= 20 in 45 seconds, it will ban them.
+**Anti-Nuke Module**
+*Anti-Nuke Module summary: Triggered by, mass mention, mass spam, mass channel delete, mass member ban, and mass member kick.*
+If someone spam pings >= 5 times in 30 seconds, it will mute them for 30 seconds. 
+If someone spam pings >= 10 times in 45 seconds, it will kick them.
+If someone spam pings >= 20 in 45 seconds, it will ban them.
 
-                         If someone spams >= 20 messages in 10 seconds, it will mute them for 2 minutes.
-                         If someone spams >= 30 messsages in 15 seconds, it will mute them for 5 minutes.
-                         If someone spams >= 40 messages in 30 seconds or less, it will kick them.
+If someone spams >= 20 messages in 10 seconds, it will mute them for 2 minutes.
+If someone spams >= 30 messsages in 15 seconds, it will mute them for 5 minutes.
+If someone spams >= 40 messages in 30 seconds or less, it will kick them.
 
-                         If someone deletes >= 5 channels in 1 minute, it will timeout them for 10 minutes.
-                         If someone deletes >= 10 in 1 minute and 30 seconds, it will timeout them for 20 minutes.
-                         If someone deletes >= 15 in 2 minutes, it will timeout the user for 30 minutes.
+If someone deletes >= 5 channels in 1 minute, it will timeout them for 10 minutes.
+If someone deletes >= 10 in 1 minute and 30 seconds, it will timeout them for 20 minutes.
+If someone deletes >= 15 in 2 minutes, it will timeout the user for 30 minutes.
 
-                         If someone bans >= 20 members in 1 minute, it will timeout the user for 10 minute.
-                         If someone bans >= 30 members in 1 minute and 30 seconds, it will kick the user to get rid of Administrator permissions.
-                         If someone bans >= 50 members in 2 minutes, it will ban the user. 
-                         __MORE SUB COMMANDS COMING SOON__
+If someone bans >= 20 members in 1 minute, it will timeout the user for 10 minute.
+If someone bans >= 30 members in 1 minute and 30 seconds, it will kick the user to get rid of Administrator permissions.
+If someone bans >= 50 members in 2 minutes, it will ban the user. 
+__MORE SUB COMMANDS COMING SOON__
 
-                         `!setup AntiNuke <setting> <trigger-mentions> <trigger-time-in-seconds>`
-                         
-                         **
+`!setup AntiNuke <setting> <trigger-mentions> <trigger-time-in-seconds>`
+
                          """, 
                          color=0x2f3136)
     await ctx.send(embed=embed)
@@ -112,11 +111,17 @@ async def antiphish(ctx, setting):
     with open("./databases/serverConfig.json", "r") as f:
         serverConfig = json.load(f)
     
-    if setting == "B" or "b":
+    if setting == "B" or setting == "b":
+        serverConfig[str(ctx.guild.id)] = {}
         serverConfig[str(ctx.guild.id)]['antiphish'] = "B"
-
+        await ctx.send("I have changed the Anti-Phish setting to **Ban**.")
+    elif setting == "k" or setting == "K":
+        serverConfig[str(ctx.guild.id)] = {}
+        serverConfig[str(ctx.guild.id)]['antiphish'] = "K"
+        await ctx.send("I have changed the Anti-Phish setting to **Kick**.")
+    
     with open("./databases/serverConfig.json", "w") as f:
-        json.dump(serverConfig, f)
+        json.dump(serverConfig, f, indent=4, sort_keys=True, ensure_ascii=False)
 
 @bot.command(aliases=['stats'])
 async def info(ctx):
@@ -402,6 +407,9 @@ async def ban(ctx, user: nextcord.User, *, reason=None):
 
 @bot.event
 async def on_message(message):
+    with open("./databases/serverConfig.json", "r") as f:
+        servConfig = json.load(f)
+    serverSetting = servConfig[str(message.guild.id)]['antiphish']
     msg = message.content.split()
     if message.author.id != bot.user.id:
         for word in msg:
@@ -421,6 +429,10 @@ async def on_message(message):
                             )
                             scamEmbed.set_footer(text="Was the link a fake URL? Use /reportfake to report the fake URL!")
                             await message.channel.send(embed=scamEmbed)
+                            if serverSetting == "K" or serverSetting == "k":
+                                await message.author.kick(reason="Anti-Phish : Sent Scam Link.")
+                            if serverSetting == "B" or serverSetting == "b":
+                                await message.author.ban(reason="Anti-Phish : Sent Scam Link.")
                             pass
                             return
         #print(message.created_at)
@@ -518,7 +530,7 @@ async def on_connect():
 
 extensions = [
     "cogs.join",
-    "cogs.ping"
+    "cogs.auditLog"
 ]
 
 try:
@@ -528,4 +540,5 @@ except Exception as e:
     print("Failed to load Cog. ERROR:\n", e)
 
 
-bot.run("OTUwNTI4NjQ5MDQ2Njc1NDY3.YiaOyQ.NOQ3BRIOSEoeEs3IlAnlrGCEqaA")
+#bot.run("OTUwNTI4NjQ5MDQ2Njc1NDY3.YiaOyQ.NOQ3BRIOSEoeEs3IlAnlrGCEqaA")
+bot.run("OTUwMTM5NTkxMDYxNTM2ODMw.YiUkcw.JxGUbHZzWrohpWRBWY_jnIpDcsk")
