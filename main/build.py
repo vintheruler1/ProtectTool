@@ -390,39 +390,6 @@ async def on_message(message):
     #                    await message.channel.send("Please do not mention more than 5 people!")
     #            except Exception as e:
     #                pass
-        try:
-            match = re.match("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", message.content).group(0)
-            if match:
-                resp = requests.get(match)
-                resssp = resp.url
-                if resssp == match or match == resssp or match is resssp or resssp is match:
-                        return
-                
-                elif resssp != match:
-                        embed = nextcord.Embed(
-                            title="<a:weewoo:951883123170365490> Link Shortened!",
-                            description=f"The link has been shortened! The real link that is unshortened is: `{resssp}` \n\n[Jump to Message]({message.jump_url})\n\n Proceed with caution at your own risk.",
-                            color=0x2f3136, timestamp=datetime.now()
-                        )
-                        await message.channel.send(embed=embed)
-                    
-            try:
-                        match = re.match("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", message.content).group(0)
-                        response = requests.get(f'{match}', verify=True)
-                        print('gotten')
-            except Exception as e:
-                        print('e')
-                        await message.channel.send("The most recently posted link is not SSL Certified.")
-            else:
-                        print("SSL Certified")
-                        pass
-                
-                #shortnerChecker = get_real_url_from_shortlink("https://eee.py") 
-                #sslCertificate = ssl_certificate('https://amongussussssss.py')
-
-                #https://discord.com/channels/267624335836053506/343944376055103488/951634087884492881
-        except Exception as e:
-            pass
     else:
         return
     await bot.process_commands(message)
